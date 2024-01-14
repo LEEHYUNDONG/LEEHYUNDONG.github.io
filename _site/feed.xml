@@ -1,201 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-01-14T13:15:06+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Hamilton</title><subtitle>A minimal and beautiful Jekyll theme best for writing and note-taking.</subtitle><author><name>Shangzhi Huang</name></author><entry><title type="html">My Example Post</title><link href="http://localhost:4000/2016/05/20/my-example-post.html" rel="alternate" type="text/html" title="My Example Post" /><published>2016-05-20T00:00:00+09:00</published><updated>2016-05-20T00:00:00+09:00</updated><id>http://localhost:4000/2016/05/20/my-example-post</id><content type="html" xml:base="http://localhost:4000/2016/05/20/my-example-post.html"><![CDATA[<p>Eos eu docendi tractatos sapientem, brute option menandri in vix, quando vivendo accommodare te ius. Nec melius fastidii constituam id, viderer theophrastus ad sit, hinc semper periculis cum id. Noluisse postulant assentior est in, no choro sadipscing repudiandae vix. Vis in euismod delenit dignissim. Ex quod nostrum sit, suas decore animal id ius, nobis solet detracto quo te.</p>
 
+<p>No laudem altera adolescens has, volumus lucilius eum no. Eam ei nulla audiam efficiantur. Suas affert per no, ei tale nibh sea. Sea ne magna harum, in denique scriptorem sea, cetero alienum tibique ei eos. Labores persequeris referrentur eos ei.</p>]]></content><author><name>Shangzhi Huang</name></author><summary type="html"><![CDATA[Eos eu docendi tractatos sapientem, brute option menandri in vix, quando vivendo accommodare te ius. Nec melius fastidii constituam id, viderer theophrastus ad sit, hinc semper periculis cum id. Noluisse postulant assentior est in, no choro sadipscing repudiandae vix. Vis in euismod delenit dignissim. Ex quod nostrum sit, suas decore animal id ius, nobis solet detracto quo te.]]></summary></entry><entry><title type="html">Some articles are just so long they deserve a really long title to see if things will break well</title><link href="http://localhost:4000/misc/2016/05/20/super-long-article.html" rel="alternate" type="text/html" title="Some articles are just so long they deserve a really long title to see if things will break well" /><published>2016-05-20T00:00:00+09:00</published><updated>2016-05-20T00:00:00+09:00</updated><id>http://localhost:4000/misc/2016/05/20/super-long-article</id><content type="html" xml:base="http://localhost:4000/misc/2016/05/20/super-long-article.html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
 
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <id>http://localhost:4000/</id>
-  <title>Chirpy</title>
-  <subtitle>A minimal, responsive and feature-rich Jekyll theme for technical writing.</subtitle>
-  <updated>2024-01-14T10:52:09+08:00</updated>
-  <author>
-    <name>your_full_name</name>
-    <uri>http://localhost:4000/</uri>
-  </author>
-  <link rel="self" type="application/atom+xml" href="http://localhost:4000/feed.xml"/>
-  <link rel="alternate" type="text/html" hreflang="en"
-    href="http://localhost:4000/"/>
-  <generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator>
-  <rights> © 2024 your_full_name </rights>
-  <icon>/assets/img/favicons/favicon.ico</icon>
-  <logo>/assets/img/favicons/favicon-96x96.png</logo>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
 
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>]]></content><author><name>Shangzhi Huang</name></author><category term="misc" /><summary type="html"><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.]]></summary></entry><entry><title type="html">This post demonstrates post content styles</title><link href="http://localhost:4000/junk/2016/05/20/this-post-demonstrates-post-content-styles.html" rel="alternate" type="text/html" title="This post demonstrates post content styles" /><published>2016-05-20T00:00:00+09:00</published><updated>2016-05-20T00:00:00+09:00</updated><id>http://localhost:4000/junk/2016/05/20/this-post-demonstrates-post-content-styles</id><content type="html" xml:base="http://localhost:4000/junk/2016/05/20/this-post-demonstrates-post-content-styles.html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit.</p>
 
-  
-  <entry>
-    <title>Customize the Favicon</title>
-    <link href="http://localhost:4000/posts/customize-the-favicon/" rel="alternate" type="text/html" title="Customize the Favicon" />
-    <published>2019-08-11T00:34:00+08:00</published>
-  
-    <updated>2019-08-11T00:34:00+08:00</updated>
-  
-    <id>http://localhost:4000/posts/customize-the-favicon/</id>
-    <content src="http://localhost:4000/posts/customize-the-favicon/" />
-    <author>
-      <name>cotes</name>
-    </author>
+<h2 id="some-great-heading-h2">Some great heading (h2)</h2>
 
-  
-    
-    <category term="Blogging" />
-    
-    <category term="Tutorial" />
-    
-  
+<p>Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu.</p>
 
-  
-    <summary>
-      
+<p>Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
 
+<h2 id="another-great-heading-h2">Another great heading (h2)</h2>
 
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit.</p>
 
+<h3 id="some-great-subheading-h3">Some great subheading (h3)</h3>
 
+<p>Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum. In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum.</p>
 
-      The favicons of Chirpy are placed in the directory assets/img/favicons/. You may want to replace them with your own. The following sections will guide you to create and replace the default favicons.
+<p>Phasellus et hendrerit mauris. Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc.</p>
 
-Generate the favicon
+<h3 id="some-great-subheading-h3-1">Some great subheading (h3)</h3>
 
-Prepare a square image (PNG, JPG, or SVG) with a size of 512x512 or more, and then go to the online tool Real Favicon Generator and click the button Select your Favicon image ...
-    </summary>
-  
+<p>Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
 
-  </entry>
+<blockquote>
+  <p>This quote will <em>change</em> your life. It will reveal the <i>secrets</i> of the universe, and all the wonders of humanity. Don’t <em>misuse</em> it.</p>
+</blockquote>
 
-  
-  <entry>
-    <title>Getting Started</title>
-    <link href="http://localhost:4000/posts/getting-started/" rel="alternate" type="text/html" title="Getting Started" />
-    <published>2019-08-09T20:55:00+08:00</published>
-  
-    <updated>2019-08-09T20:55:00+08:00</updated>
-  
-    <id>http://localhost:4000/posts/getting-started/</id>
-    <content src="http://localhost:4000/posts/getting-started/" />
-    <author>
-      <name>cotes</name>
-    </author>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt.</p>
 
-  
-    
-    <category term="Blogging" />
-    
-    <category term="Tutorial" />
-    
-  
+<h3 id="some-great-subheading-h3-2">Some great subheading (h3)</h3>
 
-  
-    <summary>
-      
+<p>Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit. Proin convallis mi ac felis pharetra aliquam. Curabitur dignissim accumsan rutrum.</p>
 
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;p&gt;</span>Hello, World!<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
 
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
+<h4 id="you-might-want-a-sub-subheading-h4">You might want a sub-subheading (h4)</h4>
 
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
-      Prerequisites
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
-Follow the instructions in the Jekyll Docs to complete the installation of the basic environment. Git also needs to be installed.
+<h4 id="but-its-probably-overkill-h4">But it’s probably overkill (h4)</h4>
 
-Installation
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
-Creating a New Site
+<h5 id="could-be-a-smaller-sub-heading-pacman-h5">Could be a smaller sub-heading, <code class="language-plaintext highlighter-rouge">pacman</code> (h5)</h5>
 
-There are two ways to create a new repository for this theme:
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
+<h6 id="small-yet-significant-sub-heading--h6">Small yet significant sub-heading  (h6)</h6>
 
-  Using the Chirpy Starter - Easy to upgrade, isolates irrelevant project files so you can focus on writing.
-  GitHub Fork - Convenient for custom devel...
-    </summary>
-  
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
-  </entry>
+<h3 id="oh-hai-an-unordered-list">Oh hai, an unordered list!!</h3>
 
-  
-  <entry>
-    <title>Writing a New Post</title>
-    <link href="http://localhost:4000/posts/write-a-new-post/" rel="alternate" type="text/html" title="Writing a New Post" />
-    <published>2019-08-08T14:10:00+08:00</published>
-  
-    <updated>2019-08-08T14:10:00+08:00</updated>
-  
-    <id>http://localhost:4000/posts/write-a-new-post/</id>
-    <content src="http://localhost:4000/posts/write-a-new-post/" />
-    <author>
-      <name>cotes</name>
-    </author>
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
-  
-    
-    <category term="Blogging" />
-    
-    <category term="Tutorial" />
-    
-  
+<ul>
+  <li>First item, yo</li>
+  <li>Second item, dawg</li>
+  <li>Third item, what what?!</li>
+  <li>Fourth item, fo sheezy my neezy</li>
+</ul>
 
-  
-    <summary>
-      
+<h3 id="oh-hai-an-ordered-list">Oh hai, an ordered list!!</h3>
 
+<p>In arcu magna, aliquet vel pretium et, molestie et arcu. Mauris lobortis nulla et felis ullamcorper bibendum. Phasellus et hendrerit mauris.</p>
 
+<ol>
+  <li>First item, yo</li>
+  <li>Second item, dawg</li>
+  <li>Third item, what what?!</li>
+  <li>Fourth item, fo sheezy my neezy</li>
+</ol>
 
+<h2 id="headings-are-cool-h2">Headings are cool! (h2)</h2>
 
+<p>Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc. Praesent varius interdum vehicula. Aenean risus libero, placerat at vestibulum eget, ultricies eu enim. Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
 
-      This tutorial will guide you how to write a post in the Chirpy template, and it’s worth reading even if you’ve used Jekyll before, as many features require specific variables to be set.
+<p>Praesent nulla tortor, malesuada adipiscing adipiscing sollicitudin, adipiscing eget est.</p>
 
-Naming and Path
+<p>Proin eget nibh a massa vestibulum pretium. Suspendisse eu nisl a ante aliquet bibendum quis a nunc.</p>
 
-Create a new file named YYYY-MM-DD-TITLE.EXTENSION and put it in the _posts of the root directory. Please note that the EXTENSION must be one of md and markdown. If you want to save time of cre...
-    </summary>
-  
+<h3 id="tables">Tables</h3>
 
-  </entry>
+<table>
+  <thead>
+    <tr>
+      <th>Title 1</th>
+      <th>Title 2</th>
+      <th>Title 3</th>
+      <th>Title 4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>lorem</td>
+      <td>lorem ipsum</td>
+      <td>lorem ipsum dolor</td>
+      <td>lorem ipsum dolor sit</td>
+    </tr>
+    <tr>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+    </tr>
+    <tr>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+    </tr>
+    <tr>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit</td>
+    </tr>
+  </tbody>
+</table>
 
-  
-  <entry>
-    <title>Text and Typography</title>
-    <link href="http://localhost:4000/posts/text-and-typography/" rel="alternate" type="text/html" title="Text and Typography" />
-    <published>2019-08-08T11:33:00+08:00</published>
-  
-    <updated>2019-08-08T11:33:00+08:00</updated>
-  
-    <id>http://localhost:4000/posts/text-and-typography/</id>
-    <content src="http://localhost:4000/posts/text-and-typography/" />
-    <author>
-      <name>cotes</name>
-    </author>
+<table>
+  <thead>
+    <tr>
+      <th>Title 1</th>
+      <th>Title 2</th>
+      <th>Title 3</th>
+      <th>Title 4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>lorem</td>
+      <td>lorem ipsum</td>
+      <td>lorem ipsum dolor</td>
+      <td>lorem ipsum dolor sit</td>
+    </tr>
+    <tr>
+      <td>lorem ipsum dolor sit amet</td>
+      <td>lorem ipsum dolor sit amet consectetur</td>
+      <td>lorem ipsum dolor sit amet</td>
+      <td>lorem ipsum dolor sit</td>
+    </tr>
+    <tr>
+      <td>lorem ipsum dolor</td>
+      <td>lorem ipsum</td>
+      <td>lorem</td>
+      <td>lorem ipsum</td>
+    </tr>
+    <tr>
+      <td>lorem ipsum dolor</td>
+      <td>lorem ipsum dolor sit</td>
+      <td>lorem ipsum dolor sit amet</td>
+      <td>lorem ipsum dolor sit amet consectetur</td>
+    </tr>
+  </tbody>
+</table>]]></content><author><name>[&quot;Bart Simpson&quot;, &quot;Nelson Mandela Muntz&quot;]</name></author><category term="junk" /><category term="markdown" /><category term="css" /><category term="html" /><summary type="html"><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum neque eget nunc mattis eu sollicitudin enim tincidunt. Vestibulum lacus tortor, ultricies id dignissim ac, bibendum in velit.]]></summary></entry><entry><title type="html">Welcome To Jekyll</title><link href="http://localhost:4000/2016/05/20/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome To Jekyll" /><published>2016-05-20T00:00:00+09:00</published><updated>2016-05-20T00:00:00+09:00</updated><id>http://localhost:4000/2016/05/20/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/2016/05/20/welcome-to-jekyll.html"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
 
-  
-    
-    <category term="Blogging" />
-    
-    <category term="Demo" />
-    
-  
+<p>To add new posts, simply add a file in the <code class="language-plaintext highlighter-rouge">_posts</code> directory that follows the convention <code class="language-plaintext highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
 
-  
-    <summary>
-      
+<p>Jekyll also offers powerful support for code snippets:</p>
 
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
+<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
 
+<p>Check out the <a href="http://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>]]></content><author><name>Shangzhi Huang</name></author><summary type="html"><![CDATA[You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.]]></summary></entry><entry><title type="html">Some articles are just so short that we have to make the footer stick</title><link href="http://localhost:4000/misc/2016/05/19/super-short-article.html" rel="alternate" type="text/html" title="Some articles are just so short that we have to make the footer stick" /><published>2016-05-19T00:00:00+09:00</published><updated>2016-05-19T00:00:00+09:00</updated><id>http://localhost:4000/misc/2016/05/19/super-short-article</id><content type="html" xml:base="http://localhost:4000/misc/2016/05/19/super-short-article.html"><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content><author><name>Shangzhi Huang</name></author><category term="misc" /><summary type="html"><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.]]></summary></entry><entry><title type="html">Task Item List</title><link href="http://localhost:4000/2016/01/11/task-item-list.html" rel="alternate" type="text/html" title="Task Item List" /><published>2016-01-11T00:00:00+09:00</published><updated>2016-01-11T00:00:00+09:00</updated><id>http://localhost:4000/2016/01/11/task-item-list</id><content type="html" xml:base="http://localhost:4000/2016/01/11/task-item-list.html"><![CDATA[<p>This post tests the style of a task item list.</p>
 
+<p>Source:</p>
 
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">-</span> [x] Eating
+<span class="p">-</span> [ ] Walking
+<span class="p">  -</span> [ ] Running
+<span class="p">-</span> [ ] Sleeping
+</code></pre></div></div>
 
-      This post is to show Markdown syntax rendering on Chirpy, you can also use it as an example of writing. Now, let’s start looking at text and typography.
+<p>Rendered:</p>
 
-Headings
-
-H1 - heading
-
-H2 - heading
-
-H3 - heading
-
-H4 - heading
-
-Paragraph
-
-Quisque egestas convallis ipsum, ut sollicitudin risus tincidunt a. Maecenas interdum malesuada egestas. Duis consectetur porta risus, sit amet vulputate urna facilis...
-    </summary>
-  
-
-  </entry>
-
-</feed>
-
-
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Eating</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Walking
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Running</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sleeping</li>
+</ul>]]></content><author><name>Shangzhi Huang</name></author><category term="to-do list" /><summary type="html"><![CDATA[This post tests the style of a task item list.]]></summary></entry></feed>
