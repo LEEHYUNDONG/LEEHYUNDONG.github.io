@@ -1,7 +1,7 @@
 ---
 layout: post
 toc: true
-title: "This post demonstrates post content styles"
+title: "@NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor"
 categories: Spring
 tags: [markdown, css, html]
 author:
