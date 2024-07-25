@@ -3,7 +3,7 @@ layout: post
 toc: true
 title: "@NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor"
 categories: Spring
-tags: [markdown, css, html]
+tags: [java, spring]
 author:
   - 이현동
 ---
