@@ -1,3 +1,13 @@
+---
+layout: post
+toc: true
+title: "[effective-java] 정적 팩터리 메서드를 고려해야 하는 이유"
+categories: effective-java
+tags: [java]
+author:
+  - 이현동
+---
+
 ## Item1. 생성자 대신 정적 팩터리  메서드 고려하라
 
 ### 1

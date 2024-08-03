@@ -1,3 +1,13 @@
+---
+layout: post
+toc: true
+title: "[effective-java] 빌더를 고려해야 하는 이유"
+categories: effective-java
+tags: [java]
+author:
+  - 이현동
+---
+
 # Item2. 생성자에 매개변수가 많다면 빌더를 고려하라
 
 > 일반 생성자는 선택적 매개변수가 많을경우 적절히 대응하기가 어렵다.
