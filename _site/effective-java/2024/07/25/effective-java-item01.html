@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>[effective-java] 정적 팩터리 메서드를 고려해야 하는 이유 | Devlog</title>
+<meta name="generator" content="Jekyll v3.9.4" />
+<meta property="og:title" content="[effective-java] 정적 팩터리 메서드를 고려해야 하는 이유" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Item1. 생성자 대신 정적 팩터리 메서드 고려하라" />
+<meta property="og:description" content="Item1. 생성자 대신 정적 팩터리 메서드 고려하라" />
+<link rel="canonical" href="http://localhost:4000/effective-java/2024/07/25/effective-java-item01.html" />
+<meta property="og:url" content="http://localhost:4000/effective-java/2024/07/25/effective-java-item01.html" />
+<meta property="og:site_name" content="Devlog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-07-25T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="[effective-java] 정적 팩터리 메서드를 고려해야 하는 이유" />
+<meta name="google-site-verification" content="u4WXQl0Eu66rsQo2kRdCNx" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-07-25T00:00:00+09:00","datePublished":"2024-07-25T00:00:00+09:00","description":"Item1. 생성자 대신 정적 팩터리 메서드 고려하라","headline":"[effective-java] 정적 팩터리 메서드를 고려해야 하는 이유","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/effective-java/2024/07/25/effective-java-item01.html"},"url":"http://localhost:4000/effective-java/2024/07/25/effective-java-item01.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Devlog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Devlog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/docs/">Docs</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#item1-생성자-대신-정적-팩터리--메서드-고려하라">Item1. 생성자 대신 정적 팩터리  메서드 고려하라</a>
+    <ul>
+      <li><a href="#1">1</a></li>
+      <li><a href="#2">2</a></li>
+      <li><a href="#3">3</a></li>
+    </ul>
+  </li>
+  <li><a href="#추가-공부해야-하는-내용">추가 공부해야 하는 내용</a>
+    <ul>
+      <li><a href="#열거-타입">열거 타입</a></li>
+      <li><a href="#플라이웨이트-패턴">플라이웨이트 패턴</a></li>
+      <li><a href="#인터페이스와-정적-메서드">인터페이스와 정적 메서드</a></li>
+      <li><a href="#리플렉션">리플렉션</a></li>
+    </ul>
+  </li>
+  <li><a href="#서비스-제공자-프레임워크">서비스 제공자 프레임워크</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content" tabindex="1">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">[effective-java] 정적 팩터리 메서드를 고려해야 하는 이유</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2024-07-25T00:00:00+09:00" itemprop="datePublished">
+        Jul 25, 2024
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">이현동</span></span></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="item1-생성자-대신-정적-팩터리--메서드-고려하라">Item1. 생성자 대신 정적 팩터리  메서드 고려하라</h2>
+
+<h3 id="1">1</h3>
+<p>팩토리 메서드 패턴으로 기능에 따라 이름을 가질 수 있음.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">com.org.lhd.effectivejava3.item01</span><span class="o">;</span>  
+  
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>  
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>  
+  
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">height</span><span class="o">;</span>  
+  
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>  
+  
+  
+    <span class="kd">public</span> <span class="nf">Member</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>  
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>  
+        <span class="k">this</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="n">height</span><span class="o">;</span>  
+    <span class="o">}</span>  
+  
+    <span class="kd">public</span> <span class="nf">Member</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>  
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>  
+        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>  
+    <span class="o">}</span>  
+<span class="o">}</span>
+</code></pre></div></div>
+<p>위의 예시처럼 자바에서는 같은 파라미터 타입을 가지는 생성자를 만들게 되면 오류가 발생함.</p>
+
+<h3 id="2">2</h3>
+<p>자바의 생성자는 매번 새로운 인스턴스를 만들어 진다. (hashcode로 조회해볼 수 있음)
+생성자를 통하여 인스턴스를 만들어주면 통제가 불가능함. 유일한 인스턴스만 만들어야 한다면 정적 팩터리 인스턴스를 만들어서 사용해야함. (객체 생성을 막아버려 존재하는 인스턴스를 가져오게 할 수 있음.) - flyweight pattern</p>
+
+<h3 id="3">3</h3>
+
+<p><strong>정리</strong></p>
+<ol>
+  <li>이름을 가질 수 있음</li>
+  <li>매번 객체를 생성하여 사용하지 않음.</li>
+  <li>반환 타입의 하위 타입 객체를 반환할 수 있는 능력이 있음.</li>
+  <li>입력 매개변수에 따라 매번 다른 클래스의 객체를 반환할 수 있음.
+    <ul>
+      <li>하위 클래스이기만 하면 되고 클라이언트 입장에서 두 클래스 존재를 모른다.</li>
+    </ul>
+  </li>
+  <li>정적 팩터리 메서드를 작성하는 시점에는 반환할 객체의 클래스가 존재하지 않아도 됨.
+    <ul>
+      <li>서비스 프레임워크를 만드는 근간</li>
+    </ul>
+  </li>
+</ol>
+
+<ul>
+  <li>열거 타입은 인스턴스가 하나만 만들어짐을 보장</li>
+  <li>같은 객체가 자주 요청되는 상황이라면 플라이웨이트 패턴을 사용할 수 있음</li>
+  <li>인터페이스가 정적 메서드를 가질 수 없다는 제한이 풀렸기 때문에 인스턴스화 불가 동반 클래스를 둘 이유가 별로 없음</li>
+  <li>서비스 제공자 프레임워크를 만드는 근간 -&gt; 정적 팩터리 메서드</li>
+  <li>서비스 제공자 인터페이스가 없다면 각 구현체를 인스턴스로 만들 때 리플렉션을 사용</li>
+  <li>브리지 패턴</li>
+  <li>의존 객체 주입 프레임워크</li>
+</ul>
+
+<h2 id="추가-공부해야-하는-내용">추가 공부해야 하는 내용</h2>
+<h3 id="열거-타입">열거 타입</h3>
+<h3 id="플라이웨이트-패턴">플라이웨이트 패턴</h3>
+<h3 id="인터페이스와-정적-메서드">인터페이스와 정적 메서드</h3>
+<h3 id="리플렉션">리플렉션</h3>
+<h2 id="서비스-제공자-프레임워크">서비스 제공자 프레임워크</h2>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#effective-java">effective-java</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#java">java</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+
+      
+        <a class="post-next" href="/effective-java/2024/07/31/effective-java-item02.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            [effective-java] 빌더를 고려해야 하는 이유
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      <!-- 
+       -->
+      <!--  -->
+      
+      <p>Copyright © 2024&nbsp;-&nbsp;2025 이현동; All rights reserved.</p>
+      
+    </div>
+    <!-- <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p> -->
+  </div>
+
+  <div class="footer-col">
+    <p>Still hardworking</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>
