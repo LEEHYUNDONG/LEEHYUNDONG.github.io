@@ -1,26 +1,27 @@
 <div class="wrapper">
-  <script>
-    function clickSidebarButton() {
-      const elem = document.getElementById("site-sidebar")
-      if (elem.style.display == "none" || elem.style.display == "") {
-        elem.style.display = "block";
-      } else {
-        elem.style.display = "none";
-      }
-    }
-  </script>
-  <a class="site-sidebar-button" onclick="clickSidebarButton()">
-    {%- if site.avatar contains "://" -%}
-      {%- assign avatar = site.avatar -%}
-    {%- else -%}
-      {%- assign avatar = site.avatar | relative_url -%}
-    {%- endif -%}
-    <i class="far fa-user"></i>
-  </a>
-
   <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
 
-  {% if site.data.navigation %}
+  <div class="site-actions">
+    {% if site.data.social %}
+      {% for social in site.data.social %}
+        {% if social.title == "GitHub" %}
+          <a class="site-github-link" href="{{ social.url }}" aria-label="GitHub">
+            <i class="{{ social.icon | default: 'fab fa-github' }}"></i>
+          </a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    <label class="theme-toggle" aria-label="Toggle color theme">
+      <input type="checkbox" id="theme-switch" onchange="toggleTheme()">
+      <span class="toggle-slider">
+        <span class="toggle-icon light">☀</span>
+        <span class="toggle-icon dark">☾</span>
+      </span>
+    </label>
+  </div>
+
+
+  {% if site.data.navigation and site.data.navigation.size > 0 %}
     <nav class="site-nav">
       <input type="checkbox" id="nav-trigger" class="nav-trigger" />
       <label for="nav-trigger" title="nav-trigger">

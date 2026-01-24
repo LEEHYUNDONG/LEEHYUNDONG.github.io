@@ -15,33 +15,61 @@
 {% endif %}
 
 <!-- Google Fonts -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-<link rel="stylesheet" href="{{ '/assets/css/skin.css' | relative_url }}">
+<link id="site-skin" rel="stylesheet" href="{{ '/assets/css/skin-mono-light.css' | relative_url }}">
 
-<!-- Begin selecting skin -->
-{% unless site.skin %}
-  <script>
-    const hour = (new Date()).getHours();
-    let filename = "";
-    if (hour >= 5 && hour < 7) {
-      filename = "{{ '/assets/css/skin-sunrise.css' | relative_url }}";
-    } else if (hour >= 7 && hour < 17) {
-      filename = "{{ '/assets/css/skin-daylight.css' | relative_url }}";
-    } else if (hour >= 17 && hour < 19) {
-      filename = "{{ '/assets/css/skin-sunset.css' | relative_url }}";
-    } else {
-      filename = "{{ '/assets/css/skin-midnight.css' | relative_url }}";
+<script>
+  const siteSkin = {
+    storageKey: "site-skin",
+    light: "{{ '/assets/css/skin-mono-light.css' | relative_url }}",
+    dark: "{{ '/assets/css/skin-mono-dark.css' | relative_url }}"
+  };
+
+  function applySkin(mode) {
+    const link = document.getElementById("site-skin");
+    if (!link) {
+      return;
     }
-    const elem = document.createElement("link");
-    elem.setAttribute("rel", "stylesheet");
-    elem.setAttribute("type", "text/css");
-    elem.setAttribute("href", filename);
-    document.getElementsByTagName("head")[0].appendChild(elem);
-  </script>
-{% endunless %}
-<!-- End selecting skin -->
+    const href = mode === "dark" ? siteSkin.dark : siteSkin.light;
+    link.setAttribute("href", href);
+    document.documentElement.setAttribute("data-theme", mode);
+
+    // Sync toggle switch state
+    const toggle = document.getElementById("theme-switch");
+    if (toggle) {
+      toggle.checked = mode === "dark";
+    }
+  }
+
+  function preferredSkin() {
+    const stored = localStorage.getItem(siteSkin.storageKey);
+    if (stored === "light" || stored === "dark") {
+      return stored;
+    }
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  window.toggleTheme = function () {
+    const current = document.documentElement.getAttribute("data-theme") || preferredSkin();
+    const next = current === "dark" ? "light" : "dark";
+    localStorage.setItem(siteSkin.storageKey, next);
+    applySkin(next);
+  };
+
+  applySkin(preferredSkin());
+
+  // Sync toggle state after DOM is ready
+  document.addEventListener("DOMContentLoaded", function() {
+    const toggle = document.getElementById("theme-switch");
+    if (toggle) {
+      toggle.checked = preferredSkin() === "dark";
+    }
+  });
+</script>
 
 <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
 
