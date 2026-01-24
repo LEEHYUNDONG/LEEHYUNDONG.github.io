@@ -181,16 +181,8 @@
  */
 .site-body {
   display: grid;
-  grid-template-columns: calc(#{$content-width} * 0.24) 1fr;
+  grid-template-columns: 1fr;
   overflow: hidden;
-
-  @include media-query($on-medium) {
-    grid-template-columns: calc(#{$content-width} * 0.18) 1fr;
-  }
-
-  @include media-query($on-small) {
-    grid-template-columns: 1fr;
-  }
 }
 
 /**

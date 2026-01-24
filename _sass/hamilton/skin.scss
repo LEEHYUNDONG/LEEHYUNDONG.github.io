@@ -5,6 +5,14 @@ body {
   background-color: $background-color;
 }
 
+:root {
+  --color-text: #{$text-color};
+  --color-text-light: #{$text-color-light};
+  --color-background: #{$background-color};
+  --color-border: #{$border-color};
+  --color-border-light: #{$border-color-light};
+}
+
 a {
   color: $link-base-color;
 

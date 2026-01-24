@@ -1,0 +1,24 @@
+$text-color:            #111111 !default;
+$text-color-light:      #606060 !default;
+$background-color:      #f6f6f6 !default;
+$code-background-color: #f1f1f1 !default;
+
+$border-color:          #cfcfcf !default;
+$border-color-light:    #e7e7e7 !default;
+$border-color-dark:     #111111 !default;
+
+$link-base-color:       #111111 !default;
+$link-visited-color:    #111111 !default;
+
+$table-text-color:      #111111 !default;
+$table-zebra-color:     #f2f2f2 !default;
+$table-header-bg-color: #ededed !default;
+$table-header-border:   #cfcfcf !default;
+$table-border-color:    #d9d9d9 !default;
+
+$pre-shadow:            none !default;
+$dropdown-shadow:       0px 8px 16px 0px rgba(0,0,0,0.06) !default;
+
+$subscribe-color:       #111111 !default;
+
+@import "daylight";
