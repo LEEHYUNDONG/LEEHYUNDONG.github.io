@@ -71,17 +71,35 @@ Semaphore (동시 inflight 제한)
         ↓
 SQS SendMessageBatch (AWS SDK)
 ```
+rate limiter
+- 시스템 전체 처리량 제어 (pod 별)
+- 효과 - 폭증하는 트래픽을 완만하게 조절
+- 데이터 보존 - 대기하지만 버리지 않음
+
+semaphore
+- 동시에 버퍼에 쓰는 스레드 수 제한
+- 효과 concurrentHashMap 경합 최소화 (queue별로 분리), 메모리 급증 방지
+- 1000개의 스레드가 동시에 버퍼를 건드리면 락 경합 심함
+
+buffer
+- 10건씩 모아서 효율적으로 SQS 전송
+- 메시지가 적어도 일정 시간 후엔 전송
+- SQS API 호출 횟수 90% 감소
+
+SQS 비동기 전송
+- 네트워크 io를 블로킹 하지 않음
+- 서버 스레드 효율적으로 사용
 
 ### 성능 개선 결과
 
 #### SQS 배치 전송 최적화
 - 달성 TPS: 2,500 TPS (목표 2,500 대비 100%)
 - 평균 레이턴시: 10 ms
-- 메시지 유실률: 0.00%
+- 메시지 유실률: 5.00% 내외
 
 #### 한계점 및 개선 방향
-- High Throughput 모드에서도 3000 TPS 이상에서 간헐적 Throttling 발생
-- Kafka 전환 검토 시작
+- High Throughput 모드에서도 3000 TPS 이상에서 간헐적 Throttling 발생 및 p95 100ms 초과
+
 
 ### 교훈 및 향후 과제
 
@@ -92,3 +110,4 @@ SQS SendMessageBatch (AWS SDK)
 
 #### 향후 개선 방향
 - SQS -> Kafka(MSK)로 전환
+- buffer 직접 제어 방식이 아닌 aws sdk 
