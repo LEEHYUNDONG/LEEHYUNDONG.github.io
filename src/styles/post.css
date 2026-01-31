@@ -136,15 +136,22 @@
   margin-bottom: 0;
 }
 
-/* Code Blocks */
+/* Inline Code */
 .post-content code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: var(--bg-code);
+  background-color: rgba(40, 44, 52, 0.1);
+  color: #c7254e;
   padding: 0.2em 0.4em;
   border-radius: 4px;
 }
 
+[data-theme='dark'] .post-content code {
+  background-color: transparent;
+  color: #e06c75;
+}
+
+/* Code Blocks */
 .post-content pre {
   margin: 1.5rem 0;
   padding: 1.25rem;
@@ -153,12 +160,14 @@
   overflow-x: auto;
   font-size: 0.875rem;
   line-height: 1.6;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .post-content pre code {
   background: none;
   padding: 0;
   font-size: inherit;
+  color: #abb2bf;
 }
 
 /* Tables */

@@ -6,7 +6,7 @@
   /* Light Theme */
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
-  --bg-code: #f4f4f5;
+  --bg-code: #101010;
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
   --text-muted: #999999;
@@ -20,7 +20,7 @@
 [data-theme='dark'] {
   --bg-primary: #121212;
   --bg-secondary: #1e1e1e;
-  --bg-code: #2d2d2d;
+  --bg-code: #101010;
   --text-primary: #e5e5e5;
   --text-secondary: #a0a0a0;
   --text-muted: #777777;
