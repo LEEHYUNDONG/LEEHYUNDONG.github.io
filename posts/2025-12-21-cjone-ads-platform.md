@@ -12,7 +12,7 @@ author:
 
 ## 광고 트래킹 시스템 아키텍처
 
-![광고 트래킹 시스템](/images/ads_tracking.png)
+![광고 트래킹 시스템](/images/1_ads_tracking.png)
 
 
 위 광고 트래킹을 처리할 수 있는 아키텍처를 고안하기 위해 다음과 같은 고민을 했다.
