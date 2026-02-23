@@ -206,3 +206,101 @@ public class Claude extends GenerativeAi {
     }
 }
 ```
+
+**2026-02-23일 회고..**
+
+돌아보면, 팩토리 패턴과 복합 패턴을 함께 적용하기보다 조금 더 단순하게 처리할 수 있었을 것 같다. 이런 생각이 든 건 최근 GoF 디자인 패턴, 토비의 스프링을 복습하면서였다.
+새삼 느끼는 건, 디자인 패턴들이 꽤 비슷한 구조로 묶인다는 점이다. 팩토리, 전략, 템플릿 메서드가 한 묶음이고, 프록시, 전략, 데코레이터도 유사한 형태를 띤다.
+왜 그럴까? 
+
+프록시는 객체의 **대리자 역할(그 자체)**을 의도하고, 전략 패턴은 그 대리자를 **교체**하는 데 초점을 두며, 데코레이터는 대리자를 통해 **객체를 장식**하면서 실제 객체에 접근한다. 결국 세 패턴 모두 인터페이스를 통해 상호작용하는 객체 사이에 틈을 만들고, 
+각자의 의도에 맞게 동작하도록 설계하는 방법들이다.
+전략 패턴이 왜 그토록 강조되었는지, 이제서야 조금씩 감이 오는 것 같다.
+
+아래 예시 코드를 통해 전에 판매원장에 적용하면 좋겠다고 판단이 되는 부분을 복합패턴만으로 구현해보았다.
+
+```java
+
+public interface GenerativeAi {
+
+    boolean isSupport(String name);
+
+    void askQuestionAboutMoreInformation();
+
+    void algorithm();
+
+    default void generate(String name) {
+        askQuestionAboutMoreInformation();
+        algorithm();
+        answer(name);
+    };
+
+    default void answer(String name) {
+        System.out.println(name + "가 답변합니다.");
+    }
+}
+
+@Component
+public class Claude implements GenerativeAi {
+
+    private static final String name = "Claude";
+
+
+    @Override
+    public boolean isSupport(String name) {
+        return Claude.name.equals(name);
+    }
+
+    @Override
+    public void askQuestionAboutMoreInformation() {
+        System.out.println(name + "가 더 필요한 정보가 없는지 제대로 답변했는지 질문합니다.");
+    }
+
+    @Override
+    public void algorithm() {
+        System.out.println(name + " 방식으로 해결해보려 합니다.");
+    }
+
+}
+@Component
+public class ChatGpt implements GenerativeAi {
+
+    private static final String name = "ChatGpt";
+
+
+    @Override
+    public boolean isSupport(String name) {
+        return ChatGpt.name.equals(name);
+    }
+
+    @Override
+    public void algorithm() {
+        System.out.println("ChatGPT 방식으로 해결해보려 합니다.");
+    }
+
+
+    @Override
+    public void askQuestionAboutMoreInformation() {
+        System.out.println("ChatGPT가 더 필요한 정보가 없는지 제대로 답변했는지 질문합니다.");
+    }
+}
+
+@RequiredArgsConstructor
+@Service
+public class GenerativeAiService {
+    
+    // list를 통해서 주입
+    private final List<GenerativeAi> generativeAis;
+    
+    public void doService(String type) {
+        generativeAis.stream()
+                .filter(ai -> ai.isSupport(type))
+                .forEach(ai -> ai.generate(type));
+    }
+}
+```
+
+복합패턴만을 이렇게 해결했다면, 내가 의도한 문제를 풀어낼 수 있을거 같았다. Factory가 필요없다고 생각한 이유는 factory를 통해 원장 생성하여 다른 서비스에서 사용되지 않는다. 단지 생성을 factory로 위임하고
+원장 서비스는 factory를 통해 생성된 service를 수행하기만 하려고 했다. 하지만 복합패턴으로 전체 서비스를 묶어서 처리하는 로직이 존재했고, 이는 filter를 통해 처리 될수 있었던거 같다.
+복합 패턴을 통해 비지니스 로직은 유지하고 확장에는 열려있는 구조로 유지가 가능하다. Factory를 도입했을때 대비 불필요한 class 파일과 switch문을 제거하여 더 유지보수(OCP)에 좋은 구조가 됐을거 같다.
+
