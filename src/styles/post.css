@@ -70,6 +70,10 @@
 .post-content {
   font-size: 1.0625rem;
   line-height: 1.8;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .post-content h1,
@@ -155,19 +159,94 @@
 .post-content pre {
   margin: 1.5rem 0;
   padding: 1.25rem;
+  padding-top: 3rem;
   background-color: var(--bg-code);
   border-radius: 8px;
   overflow-x: auto;
   font-size: 0.875rem;
   line-height: 1.6;
   border: 1px solid var(--code-border);
+  position: relative;
 }
 
 .post-content pre code {
-  background: none;
+  background: none !important;
   padding: 0;
   font-size: inherit;
   color: inherit;
+}
+
+/* Remove all backgrounds from syntax highlighting spans */
+.post-content pre code *,
+.post-content pre code span,
+.post-content pre .hljs *,
+.post-content pre .hljs span {
+  background: none !important;
+  background-color: transparent !important;
+}
+
+/* Code Copy Button */
+.code-block-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.copy-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.copy-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.copy-button.copied {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.4);
+  color: #4caf50;
+}
+
+.copy-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Light theme button styles */
+[data-theme='light'] .copy-button {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-secondary);
+}
+
+[data-theme='light'] .copy-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
+}
+
+[data-theme='light'] .copy-button.copied {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: rgba(76, 175, 80, 0.3);
+  color: #2e7d32;
 }
 
 /* Tables */

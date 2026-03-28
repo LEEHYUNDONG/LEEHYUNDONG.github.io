@@ -1,3 +1,53 @@
+/* CRITICAL: Remove ALL backgrounds from code syntax highlighting */
+pre code span,
+pre code .hljs-keyword,
+pre code .hljs-string,
+pre code .hljs-title,
+pre code .hljs-name,
+pre code .hljs-attr,
+pre code .hljs-number,
+pre code .hljs-literal,
+pre code .hljs-built_in,
+pre code .hljs-comment,
+pre code .hljs-doctag,
+pre code .hljs-formula,
+pre code .hljs-section,
+pre code .hljs-selector-tag,
+pre code .hljs-deletion,
+pre code .hljs-subst,
+pre code .hljs-regexp,
+pre code .hljs-addition,
+pre code .hljs-attribute,
+pre code .hljs-variable,
+pre code .hljs-template-variable,
+pre code .hljs-type,
+pre code .hljs-selector-class,
+pre code .hljs-selector-attr,
+pre code .hljs-selector-pseudo,
+pre code .hljs-symbol,
+pre code .hljs-bullet,
+pre code .hljs-link,
+pre code .hljs-meta,
+pre code .hljs-selector-id,
+pre code .hljs-params,
+pre code .hljs-operator,
+pre code .hljs-tag,
+pre code .hljs-emphasis,
+pre code .hljs-strong,
+pre code .hljs-title.function_,
+pre code .hljs-title.class_,
+pre code .hljs-property,
+pre code .hljs-punctuation,
+pre code .hljs-template-tag,
+pre code .hljs-quote,
+pre code .hljs-code,
+pre code [class^="hljs-"],
+pre code [class*=" hljs-"] {
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
 /* CSS Variables */
 :root {
   --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

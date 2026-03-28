@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { formatDate } from '@/lib/utils';
 import TableOfContents from '@/components/TableOfContents';
+import CodeCopyButton from '@/components/CodeCopyButton';
 import '@/styles/post.css';
 
 interface PageProps {
@@ -41,6 +42,7 @@ export default async function PostPage({ params }: PageProps) {
   return (
     <>
       <TableOfContents />
+      <CodeCopyButton />
       <article className="post">
         <header className="post-header">
           {post.categories && (
