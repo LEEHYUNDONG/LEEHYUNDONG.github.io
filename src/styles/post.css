@@ -140,14 +140,14 @@
 .post-content code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: rgba(40, 44, 52, 0.1);
+  background-color: #f0f0f0;
   color: #c7254e;
   padding: 0.2em 0.4em;
   border-radius: 4px;
 }
 
 [data-theme='dark'] .post-content code {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.1);
   color: #e06c75;
 }
 
@@ -160,14 +160,14 @@
   overflow-x: auto;
   font-size: 0.875rem;
   line-height: 1.6;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--code-border);
 }
 
 .post-content pre code {
   background: none;
   padding: 0;
   font-size: inherit;
-  color: #abb2bf;
+  color: inherit;
 }
 
 /* Tables */

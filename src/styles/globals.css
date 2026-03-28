@@ -6,7 +6,8 @@
   /* Light Theme */
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
-  --bg-code: #101010;
+  --bg-code: #fafafa;
+  --code-border: #e5e5e5;
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
   --text-muted: #999999;
@@ -20,7 +21,8 @@
 [data-theme='dark'] {
   --bg-primary: #121212;
   --bg-secondary: #1e1e1e;
-  --bg-code: #101010;
+  --bg-code: #282c34;
+  --code-border: rgba(255, 255, 255, 0.1);
   --text-primary: #e5e5e5;
   --text-secondary: #a0a0a0;
   --text-muted: #777777;
@@ -80,6 +82,10 @@ a:hover {
   padding: 2rem 1.5rem;
 }
 
+.site-main:has(.post) {
+  max-width: 800px;
+}
+
 /* Header */
 .site-header {
   border-bottom: 1px solid var(--border-color);
@@ -96,6 +102,10 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.site-container:has(.post) .header-wrapper {
+  max-width: 800px;
 }
 
 .site-title {
