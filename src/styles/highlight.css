@@ -149,10 +149,10 @@
   color: #986801;
 }
 
-/* Dark Theme - GitHub Dark Dimmed */
+/* Dark Theme - Enhanced One Dark Pro */
 [data-theme='dark'] .hljs {
   background: var(--bg-code) !important;
-  color: #adbac7;
+  color: #abb2bf;
 }
 
 /* Ensure NO backgrounds in dark mode either */
@@ -162,62 +162,82 @@
   background-color: transparent !important;
 }
 
+/* Comments - Gray */
 [data-theme='dark'] .hljs-comment,
 [data-theme='dark'] .hljs-quote {
-  color: #768390;
+  color: #5c6370;
   font-style: italic;
 }
 
+/* Keywords - Purple */
 [data-theme='dark'] .hljs-doctag,
 [data-theme='dark'] .hljs-keyword,
 [data-theme='dark'] .hljs-formula {
-  color: #f47067;
+  color: #c678dd;
 }
 
+/* HTML Tags - Red */
 [data-theme='dark'] .hljs-section,
 [data-theme='dark'] .hljs-name,
 [data-theme='dark'] .hljs-selector-tag,
 [data-theme='dark'] .hljs-deletion,
 [data-theme='dark'] .hljs-subst {
-  color: #f47067;
+  color: #e06c75;
 }
 
+/* Booleans & Constants - Orange */
 [data-theme='dark'] .hljs-literal {
-  color: #6cb6ff;
+  color: #d19a66;
 }
 
+/* Strings - Green */
 [data-theme='dark'] .hljs-string,
 [data-theme='dark'] .hljs-regexp,
 [data-theme='dark'] .hljs-addition,
 [data-theme='dark'] .hljs-attribute,
 [data-theme='dark'] .hljs-meta .hljs-string {
-  color: #96d0ff;
+  color: #98c379;
 }
 
+/* Numbers - Orange */
+[data-theme='dark'] .hljs-number {
+  color: #d19a66;
+}
+
+/* Variables & Attributes - Red */
 [data-theme='dark'] .hljs-attr,
 [data-theme='dark'] .hljs-variable,
-[data-theme='dark'] .hljs-template-variable,
+[data-theme='dark'] .hljs-template-variable {
+  color: #e06c75;
+}
+
+/* Types & Classes - Yellow */
 [data-theme='dark'] .hljs-type,
 [data-theme='dark'] .hljs-selector-class,
 [data-theme='dark'] .hljs-selector-attr,
-[data-theme='dark'] .hljs-selector-pseudo,
-[data-theme='dark'] .hljs-number {
-  color: #6cb6ff;
+[data-theme='dark'] .hljs-selector-pseudo {
+  color: #e5c07b;
 }
 
+/* Symbols & Links - Cyan */
 [data-theme='dark'] .hljs-symbol,
 [data-theme='dark'] .hljs-bullet,
-[data-theme='dark'] .hljs-link,
+[data-theme='dark'] .hljs-link {
+  color: #56b6c2;
+}
+
+/* Meta & Titles - Blue */
 [data-theme='dark'] .hljs-meta,
 [data-theme='dark'] .hljs-selector-id,
 [data-theme='dark'] .hljs-title {
-  color: #6cb6ff;
+  color: #61afef;
 }
 
+/* Built-in & Class Names - Yellow */
 [data-theme='dark'] .hljs-built_in,
 [data-theme='dark'] .hljs-title.class_,
 [data-theme='dark'] .hljs-class .hljs-title {
-  color: #f69d50;
+  color: #e5c07b;
 }
 
 [data-theme='dark'] .hljs-emphasis {
@@ -232,26 +252,32 @@
   text-decoration: underline;
 }
 
+/* Function Names - Blue */
 [data-theme='dark'] .hljs-title.function_ {
-  color: #dcbdfb;
+  color: #61afef;
 }
 
+/* Parameters - Light Gray */
 [data-theme='dark'] .hljs-params {
-  color: #adbac7;
+  color: #abb2bf;
 }
 
+/* Operators - Cyan */
 [data-theme='dark'] .hljs-operator {
-  color: #f47067;
+  color: #56b6c2;
 }
 
+/* HTML Tags - Default */
 [data-theme='dark'] .hljs-tag {
-  color: #adbac7;
+  color: #abb2bf;
 }
 
+/* HTML Tag Names - Red */
 [data-theme='dark'] .hljs-tag .hljs-name {
-  color: #8ddb8c;
+  color: #e06c75;
 }
 
+/* HTML Attributes - Yellow */
 [data-theme='dark'] .hljs-tag .hljs-attr {
-  color: #6cb6ff;
+  color: #d19a66;
 }
