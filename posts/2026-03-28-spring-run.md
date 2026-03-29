@@ -539,7 +539,7 @@ ConfigurableBeanFactory에 더해, 빈 정의를 분석·수정하고 싱글톤�
 
 ## refreshContext(context)
 
-![refreshContext.png](../public/images/0328/refreshContext.png)
+![refreshContext.png](/images/0328/refreshContext.png)
 
 ```java
 private void refreshContext(ConfigurableApplicationContext context) {
@@ -572,7 +572,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 }
 ```
 
-![hierarchy of](../public/images/0328/hierarchyOfWebServlet.png)
+![hierarchy of](/images/0328/hierarchyOfWebServlet.png)
 
 실제 `super.refresh();` 호출을 거슬러 올라가보면 AbstractApplicationContext가 호출되는것을 알 수 있다.
 
@@ -743,7 +743,7 @@ protected void prepareRefresh() {
 ### registerBeanPostProcessors(beanFactory)
 
 `registerBeanPostProcessors()` 과정에서 설정에 따라 다르겠지만 모든 beanName이 등록되는것을 확인할 수 있다.
-![register bean](../public/images/0328/registerBean.png)
+![register bean](/images/0328/registerBean.png)
 
 ```java
 /**
@@ -929,7 +929,7 @@ protected void registerListeners() {
 }
 ```
 
-![application listener](../public/images/0328/applicationListener.png)
+![application listener](/images/0328/applicationListener.png)
 
 디버거에서 확인해보면 기본적으로 이미 인스턴스화된 12개의 listener를 등록하며 반복문을 순회하며 ApplicationListener를 Multicaster에 등록한다.
 하단에 Bean Name을 추출하는 부분은 `addApplicationListenerBean(listenerBeanName)` 으로 동작하며 초기화를 해당 메서드 실행시에 진행하는 것이 아닌
