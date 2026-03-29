@@ -892,7 +892,9 @@ public ApplicationEventMulticaster applicationEventMulticaster() {
 <br/>
 
 ### onRefresh()
-> Template method which can be overridden to add context-specific refresh work. Called on initialization of special beans, before instantiation of singletons. This implementation is empty. throws BeansException in case of errors
+
+> Template method which can be overridden to add context-specific refresh work. Called on initialization of special
+> beans, before instantiation of singletons. This implementation is empty. throws BeansException in case of errors
 
 템플릿 메서드로 실제로는 비어 있으며 자식 클래스(concrete)에서 이를 구현하여 처리할 수 있다.
 
@@ -959,3 +961,65 @@ addApplicationListenerBean(beanName)의 경우 @Component로 등록된 리스너
 
 <br/>
 
+### finishBeanFactoryInitialization(beanFactory)
+
+```java
+public abstract class AbstractApplicationContext extends DefaultResourceLoader
+        implements ConfigurableApplicationContext {
+    
+    
+    protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+        // Mark current thread for singleton instantiation with applied bootstrap locking.
+        beanFactory.prepareSingletonBootstrap();
+
+        // Initialize bootstrap executor for this context.
+        if (beanFactory.containsBean(BOOTSTRAP_EXECUTOR_BEAN_NAME) &&
+                beanFactory.isTypeMatch(BOOTSTRAP_EXECUTOR_BEAN_NAME, Executor.class)) {
+            beanFactory.setBootstrapExecutor(
+                    beanFactory.getBean(BOOTSTRAP_EXECUTOR_BEAN_NAME, Executor.class));
+        }
+
+        // Initialize conversion service for this context.
+        if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
+                beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
+            beanFactory.setConversionService(
+                    beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
+        }
+
+        // Register a default embedded value resolver if no BeanFactoryPostProcessor
+        // (such as a PropertySourcesPlaceholderConfigurer bean) registered any before:
+        // at this point, primarily for resolution in annotation attribute values.
+        if (!beanFactory.hasEmbeddedValueResolver()) {
+            beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
+        }
+
+        // Call BeanFactoryInitializer beans early to allow for initializing specific other beans early.
+        String[] initializerNames = beanFactory.getBeanNamesForType(BeanFactoryInitializer.class, false, false);
+        for (String initializerName : initializerNames) {
+            beanFactory.getBean(initializerName, BeanFactoryInitializer.class).initialize(beanFactory);
+        }
+
+        // Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
+        String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
+        for (String weaverAwareName : weaverAwareNames) {
+            try {
+                beanFactory.getBean(weaverAwareName, LoadTimeWeaverAware.class);
+            } catch (BeanNotOfRequiredTypeException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Failed to initialize LoadTimeWeaverAware bean '" + weaverAwareName +
+                            "' due to unexpected type mismatch: " + ex.getMessage());
+                }
+            }
+        }
+
+        // Stop using the temporary ClassLoader for type matching.
+        beanFactory.setTempClassLoader(null);
+
+        // Allow for caching all bean definition metadata, not expecting further changes.
+        beanFactory.freezeConfiguration();
+
+        // Instantiate all remaining (non-lazy-init) singletons.
+        beanFactory.preInstantiateSingletons();
+    }
+}
+```

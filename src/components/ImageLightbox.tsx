@@ -9,7 +9,7 @@ export default function ImageLightbox() {
 
   useEffect(() => {
     // 포스트 내 모든 이미지에 클릭 이벤트 추가
-    const images = document.querySelectorAll('.post-content img');
+    const images = document.querySelectorAll<HTMLImageElement>('.post-content img');
 
     const handleImageClick = (e: Event) => {
       const img = e.target as HTMLImageElement;
