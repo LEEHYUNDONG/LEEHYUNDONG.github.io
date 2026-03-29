@@ -11,13 +11,13 @@ author:
 # 서론
 
 Spring Application의 run()이 호출될 때 내부에서 어떤 일이 일어나는지, 사실 그동안 깊이 생각해본 적이 없었던 것 같다.
-최근 Spring Security를 세세하게 들여다보면서 정교하게 설계된 Spring 생태계에 대한 관심이 많이 생겼고, 
+최근 Spring Security를 세세하게 들여다보면서 정교하게 설계된 Spring 생태계에 대한 관심이 많이 생겼고,
 시간이 날 때 실제로 애플리케이션이 어떤 방식으로 실행되는지 직접 따라가 보고 싶어졌다.
 
-Spring Authorization Server를 공부하면서 Spring 프레임워크의 교체 용이성에 감탄하는 순간이 여러 번 있었다. 
-예를 들어 /oauth2/authorize 인가 요청이 들어오면, 프레임워크는 `Web Filter` 체인을 타고 들어와 Converter에서 요청의 타입과 인스턴스를 검증한 뒤, 
-Provider가 인증 처리에 필요한 AuthenticationToken을 반환하는 흐름으로 동작한다. 
-만약 추가 파라미터를 받아야 하거나 인증 과정에서 별도의 처리가 필요하다면, 
+Spring Authorization Server를 공부하면서 Spring 프레임워크의 교체 용이성에 감탄하는 순간이 여러 번 있었다.
+예를 들어 /oauth2/authorize 인가 요청이 들어오면, 프레임워크는 `Web Filter` 체인을 타고 들어와 Converter에서 요청의 타입과 인스턴스를 검증한 뒤,
+Provider가 인증 처리에 필요한 AuthenticationToken을 반환하는 흐름으로 동작한다.
+만약 추가 파라미터를 받아야 하거나 인증 과정에서 별도의 처리가 필요하다면,
 `Provider`를 직접 커스텀해서 교체하거나 `Customizer`를 통해 Provider를 추가하는 것만으로 원하는 동작을 끼워 넣을 수 있다.
 이 부분은 추후에 글로 자세히 남겨보려고 한다.
 
@@ -191,6 +191,7 @@ private DefaultBootstrapContext createBootstrapContext() {
 - 본 컨텍스트 생성 전에 필요한 리소스 준비
 
 ```java
+
 @SpringBootApplication
 public class SpringDojoApplication {
     public static void main(String[] args) {
@@ -253,9 +254,9 @@ default로 boot app을 구동했을때 debugger로 출력해보면 다음과 같
 
 해당 SpringApplicationRunListener는 `package org.springframework.boot.context.event` 내에 포함되어 있고,
 아래와 같은 동작을 수행한다.
+
 > Called once the environment has been prepared, but before the {@link ApplicationContext} has been created.
-> @param bootstrapContext the bootstrap context
-> @param environment the environment
+
 
 복잡하긴 하지만 천천히 코드 내부를 뜯어보면,
 
@@ -447,7 +448,8 @@ WebApplicationType에 맞는 Context를 생성한다.
 <br/>
 
 ## 9. prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner)
-> 
+
+>
 
 ```java
 private void prepareContext(DefaultBootstrapContext bootstrapContext,
@@ -498,27 +500,462 @@ private void prepareContext(DefaultBootstrapContext bootstrapContext,
     }
     listeners.contextLoaded(context);
 }
-
-protected void postProcessApplicationContext(ConfigurableApplicationContext context) {
-    if (this.beanNameGenerator != null) {
-        context.getBeanFactory()
-                .registerSingleton(AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR, this.beanNameGenerator);
-    }
-    if (this.resourceLoader != null) {
-        if (context instanceof GenericApplicationContext genericApplicationContext) {
-            genericApplicationContext.setResourceLoader(this.resourceLoader);
-        }
-        if (context instanceof DefaultResourceLoader defaultResourceLoader) {
-            defaultResourceLoader.setClassLoader(this.resourceLoader.getClassLoader());
-        }
-    }
-    if (this.addConversionService) {
-        context.getBeanFactory().setConversionService(context.getEnvironment().getConversionService());
-    }
-}
 ```
+
 `bootstrapContext.close(context)`의 경우 앞서 우리가 빠르게 bootstrap container를 통해 띄웠던 bean이나 listener를 이제 실제
 application으로 옮겨서 실행하는 작업을 해야하기 때문에 bootstrapContext는 종료하게 된다.
 
+`ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();` 를 통해 필요한 beanFactory 정보를 context로 부터 불러온다.
+ConfigurableListableBeanFactory는 아래 ListableBeanFactory, AutowireCapableBeanFactory, ConfigurableBeanFactory를 상속하는
+factory이며 더 상위는 BeanFactory이다.
 
-(작성중)
+```java
+public interface ConfigurableListableBeanFactory extends ListableBeanFactory, AutowireCapableBeanFactory, ConfigurableBeanFactory {
+}
+```
+
+> Configuration interface to be implemented by most listable bean factories. In addition to ConfigurableBeanFactory, it
+> provides facilities to analyze and modify bean definitions, and to pre-instantiate singletons.
+> This subinterface of org.springframework.beans.factory. BeanFactory is not meant to be used in normal application
+> code:
+> Stick to org. springframework. beans. factory. BeanFactory or ListableBeanFactory for typical use cases. This
+> interface
+> is just meant to allow for framework-internal plug'n'play even when needing access to bean factory configuration
+> methods.
+
+ConfigurableListableBeanFactory는 애플리케이션 코드 상 일반적인 사용을 위해서 제공되는것이 아니며 일반 사용이 목적이라면 `ListableBeanFactory`를 사용해야한다.
+ConfigurableBeanFactory에 더해, 빈 정의를 분석·수정하고 싱글톤을 사전 인스턴스화(pre-instantiate)하는 기능을 추가로 제공한다.
+
+이후 ConfigurableApplicationContext로부터 beanFactory를 꺼내어 아래 작업들을 수행한다.
+
+1. applicationArguments singleton bean 등록 (beanFactory.registerSingleton)
+2. printedBanner singleton bean 등록 (beanFactory.registerSingleton)
+3. LazyInitializationBeanFactoryPostProcessor 생성하여 등록 (context.addBeanFactoryPostProcessor) — lazyInitialization 설정이
+   활성화된 경우에만
+4. context.addApplicationListener(new KeepAlive()) — KeepAlive 객체를 등록
+5. PropertySourceOrderingBeanFactoryPostProcessor 생성하여 등록 (context.addBeanFactoryPostProcessor)
+
+<br/>
+
+## refreshContext(context)
+
+![refreshContext.png](../public/images/0328/refreshContext.png)
+
+```java
+private void refreshContext(ConfigurableApplicationContext context) {
+    if (this.properties.isRegisterShutdownHook()) {
+        shutdownHook.registerApplicationContext(context);
+    }
+    refresh(context);
+}
+
+public class ServletWebServerApplicationContext extends GenericWebApplicationContext implements ConfigurableWebServerApplicationContext {
+    public final void refresh() throws BeansException, IllegalStateException {
+        try {
+            super.refresh();
+        } catch (RuntimeException var5) {
+            RuntimeException ex = var5;
+            WebServer webServer = this.webServer;
+            if (webServer != null) {
+                try {
+                    webServer.stop();
+                    webServer.destroy();
+                } catch (RuntimeException var4) {
+                    RuntimeException stopOrDestroyEx = var4;
+                    ex.addSuppressed(stopOrDestroyEx);
+                }
+            }
+
+            throw ex;
+        }
+    }
+}
+```
+
+![hierarchy of](../public/images/0328/hierarchyOfWebServlet.png)
+
+실제 `super.refresh();` 호출을 거슬러 올라가보면 AbstractApplicationContext가 호출되는것을 알 수 있다.
+
+```java
+public abstract class AbstractApplicationContext extends DefaultResourceLoader
+        implements ConfigurableApplicationContext {
+
+    static {
+        // Eagerly load the ContextClosedEvent class to avoid weird classloader issues
+        // on application shutdown in WebLogic 8.1. (Reported by Dustin Woods.)
+        ContextClosedEvent.class.getName();
+    }
+
+    @Override
+    public void refresh() throws BeansException, IllegalStateException {
+        this.startupShutdownLock.lock();
+        try {
+            this.startupShutdownThread = Thread.currentThread();
+
+            // refresh()를 실행 중인 스레드를 기록.
+            // 이후 refresh 중복 실행 방지 및 shutdown 시 해당 스레드 인터럽트에 사용됨
+            StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
+
+            // refresh 전 사전 준비 작업:
+            // - active/closed 플래그 초기화
+            // - PropertySource 초기화 (initPropertySources)
+            // - Environment의 required properties 검증
+            // - earlyApplicationListeners 초기화
+            prepareRefresh();
+
+            // Tell the subclass to refresh the internal bean factory.
+            // 내부 BeanFactory를 준비하는 단계.
+            // SpringBoot 기준 GenericApplicationContext는 이미 생성된 DefaultListableBeanFactory를 반환.
+            // XML 기반 컨텍스트라면 이 시점에 XML을 파싱하여 BeanDefinition을 등록함
+            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+            // BeanFactory 자체에 대한 기본 설정을 적용하는 단계:
+            // - ClassLoader 설정
+            // - SpEL(Expression Language) 파서 등록
+            // - PropertyEditorRegistrar 등록
+            // - ApplicationContextAware 등록을 위한 BeanPostProcessor 추가
+            // - BeanFactory, ApplicationContext 등 내부 의존성 타입을 autowiring 대상에서 제외
+            // - environment, systemProperties 등 기본 singleton bean 등록
+            prepareBeanFactory(beanFactory);
+
+            try {
+                // Allows post-processing of the bean factory in context subclasses.
+                // 서브클래스에서 BeanFactory를 추가 커스터마이징할 수 있는 훅 메서드이다. 이 시점에 웹 관련 스코프(request, session)를 등록함
+                postProcessBeanFactory(beanFactory);
+
+                StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
+
+                // Invoke factory processors registered as beans in the context.
+                // BeanFactoryPostProcessor 및 BeanDefinitionRegistryPostProcessor 실행 단계.
+                // 대표적으로 ConfigurationClassPostProcessor가 여기서 실행되어
+                // @Configuration, @ComponentScan, @Bean 등을 처리하고 BeanDefinition을 등록함.
+                // 즉, 이 시점에 대부분의 BeanDefinition 스캔/등록이 완료됨
+                invokeBeanFactoryPostProcessors(beanFactory);
+
+                // bean 생성을 가로채기 위해 사용되는 bean post processor 등록.
+                // BeanPostProcessor는 bean 인스턴스 생성 전후에 개입하는 확장 포인트.
+                // 대표적인 예:
+                // - AutowiredAnnotationBeanPostProcessor (@Autowired, @Value 처리)
+                // - CommonAnnotationBeanPostProcessor (@PostConstruct, @PreDestroy 처리)
+                // 이 단계에서 등록만 하고, 실제 실행은 이후 bean 생성 시점에 이루어짐
+                registerBeanPostProcessors(beanFactory);
+                beanPostProcess.end();
+
+                // message source 초기화.
+                // MessageSource bean이 등록되어 있으면 해당 bean을 사용하고,
+                // 없으면 기본 DelegatingMessageSource를 등록함.
+                // 다국어(i18n) 메시지 처리를 담당함
+                initMessageSource();
+
+                // ApplicationEvent를 여러 ApplicationListener에게 멀티캐스트하는
+                // ApplicationEventMulticaster를 초기화함.
+                // 기본적으로 SimpleApplicationEventMulticaster가 등록됨
+                initApplicationEventMulticaster();
+
+                // 서브클래스 전용 특수 bean 초기화 훅 메서드.
+                // 웹 환경에서는 이 시점에 EmbeddedWebServer(Tomcat 등)가 생성됨
+                onRefresh();
+
+                // Check for listener beans and register them.
+                // BeanDefinition으로 등록된 ApplicationListener bean들을 찾아
+                // ApplicationEventMulticaster에 등록함.
+                // 또한 prepareRefresh()에서 보관해둔 earlyApplicationEvents를 이 시점에 발행함
+                registerListeners();
+
+                // lazy-init이 아닌 모든 singleton bean을 이 시점에 실제로 인스턴스화함.
+                // @Autowired 주입, @PostConstruct 실행 등 bean 초기화 라이프사이클 전체가 여기서 진행됨.
+                // 가장 무거운 단계
+                finishBeanFactoryInitialization(beanFactory);
+
+                // refresh 완료 후 마무리 작업:
+                // - LifecycleProcessor 초기화 및 onRefresh() 호출
+                // - ContextRefreshedEvent 발행
+                // - 웹 환경이라면 WebServer 시작 및 ServerStartedEvent 발행
+                finishRefresh();
+            } catch (RuntimeException | Error ex) {
+                // 불필요한 내용 중략
+
+                // Destroy already created singletons to avoid dangling resources.
+                destroyBeans();
+
+                // active flag 활성화
+                cancelRefresh(ex);
+
+                // caller에게 예외 전파
+                throw ex;
+            } finally {
+                contextRefresh.end();
+            }
+        } finally {
+            this.startupShutdownThread = null;
+            this.startupShutdownLock.unlock();
+        }
+    }
+}
+```
+
+`refreshContext`의 경우 가장 중요한 메서드로 각 단계별로 내부 메서드를 확인해보려고 한다.
+
+<br/>
+
+### prepareRefresh()
+
+```java
+private @Nullable Set<ApplicationListener<?>> earlyApplicationListeners;
+
+protected void prepareRefresh() {
+    // 활성 상태로 전환한다
+    this.startupDate = System.currentTimeMillis();
+    this.closed.set(false);
+    this.active.set(true);
+
+    // logger가 확성화 되어 있다면 trace나 debug 모드로 로깅 처리
+    if (logger.isDebugEnabled()) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("Refreshing " + this);
+        } else {
+            logger.debug("Refreshing " + getDisplayName());
+        }
+    }
+
+    // 실제로는 아무것도 하지 않음
+    initPropertySources();
+
+    // environment의 필수 property를 validate
+    getEnvironment().validateRequiredProperties();
+
+    // early application listener를 초기화한다.
+    if (this.earlyApplicationListeners == null) {
+        this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
+    } else {
+        // Reset local application listeners to pre-refresh state.
+        this.applicationListeners.clear();
+        this.applicationListeners.addAll(this.earlyApplicationListeners);
+    }
+
+    // 초기화 - 인스턴스 변수 earlyApplicationEvents
+    this.earlyApplicationEvents = new LinkedHashSet<>();
+}
+```
+
+<br/>
+
+### registerBeanPostProcessors(beanFactory)
+
+`registerBeanPostProcessors()` 과정에서 설정에 따라 다르겠지만 모든 beanName이 등록되는것을 확인할 수 있다.
+![register bean](../public/images/0328/registerBean.png)
+
+```java
+/**
+ * bean 초기화 및 등록
+ */
+protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+    PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);
+}
+
+final class PostProcessorRegistrationDelegate {
+    public static void registerBeanPostProcessors(
+            ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
+
+        String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
+
+        int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
+        beanFactory.addBeanPostProcessor(
+                new BeanPostProcessorChecker(beanFactory, postProcessorNames, beanProcessorTargetCount));
+
+        List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+        List<BeanPostProcessor> internalPostProcessors = new ArrayList<>();
+        List<String> orderedPostProcessorNames = new ArrayList<>();
+        List<String> nonOrderedPostProcessorNames = new ArrayList<>();
+        for (String ppName : postProcessorNames) {
+            if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+                BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+                priorityOrderedPostProcessors.add(pp);
+                if (pp instanceof MergedBeanDefinitionPostProcessor) {
+                    internalPostProcessors.add(pp);
+                }
+            } else if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
+                orderedPostProcessorNames.add(ppName);
+            } else {
+                nonOrderedPostProcessorNames.add(ppName);
+            }
+        }
+
+        // PriorityOrdered bean 등록 
+        sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+        registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
+
+        // @Order에 따른 bean 등록
+        List<BeanPostProcessor> orderedPostProcessors = new ArrayList<>(orderedPostProcessorNames.size());
+        for (String ppName : orderedPostProcessorNames) {
+            BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+            orderedPostProcessors.add(pp);
+            if (pp instanceof MergedBeanDefinitionPostProcessor) {
+                internalPostProcessors.add(pp);
+            }
+        }
+        // beanFactory 우선순위에 맞게 다시 sorting
+        sortPostProcessors(orderedPostProcessors, beanFactory);
+        registerBeanPostProcessors(beanFactory, orderedPostProcessors);
+
+        // 일반 Bean 등록
+        List<BeanPostProcessor> nonOrderedPostProcessors = new ArrayList<>(nonOrderedPostProcessorNames.size());
+        for (String ppName : nonOrderedPostProcessorNames) {
+            BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+            nonOrderedPostProcessors.add(pp);
+            if (pp instanceof MergedBeanDefinitionPostProcessor) {
+                internalPostProcessors.add(pp);
+            }
+        }
+        registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);
+
+        // internal beanProcessor 재등록
+        sortPostProcessors(internalPostProcessors, beanFactory);
+        registerBeanPostProcessors(beanFactory, internalPostProcessors);
+
+        beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
+    }
+
+    // 내부 메서드
+    private static void registerBeanPostProcessors(
+            ConfigurableListableBeanFactory beanFactory, List<? extends BeanPostProcessor> postProcessors) {
+
+        if (beanFactory instanceof AbstractBeanFactory abstractBeanFactory) {
+            abstractBeanFactory.addBeanPostProcessors(postProcessors);
+        } else {
+            for (BeanPostProcessor postProcessor : postProcessors) {
+                beanFactory.addBeanPostProcessor(postProcessor);
+            }
+        }
+    }
+}
+
+```
+
+아래와 같이 `registerBeanPostProcessors`는 동작한다.
+
+1. PriorityOrdered 구현한 PostProcessor 먼저 등록
+2. Ordered 구현한 PostProcessor 등록
+3. 나머지 등록
+4. Internal PostProcessor 재등록
+
+<br/>
+
+### initApplicationEventMulticaster()
+
+```java
+public abstract class AbstractApplicationContext extends DefaultResourceLoader
+        implements ConfigurableApplicationContext {
+    public static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
+
+    // application event multicaster 초기화
+    protected void initApplicationEventMulticaster() {
+        ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+        if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
+            this.applicationEventMulticaster =
+                    beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Using ApplicationEventMulticaster [" + this.applicationEventMulticaster + "]");
+            }
+        } else {
+            this.applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
+            beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
+            if (logger.isTraceEnabled()) {
+                logger.trace("No '" + APPLICATION_EVENT_MULTICASTER_BEAN_NAME + "' bean, using " +
+                        "[" + this.applicationEventMulticaster.getClass().getSimpleName() + "]");
+            }
+        }
+    }
+}
+```
+
+사용자가 별도로 등록한 bean이 존재하지 않다면, default로 SimpleApplicationEventMulticaster가 생성되는 것을 알 수 있다.
+만약 event 비동기 처리가 필요하다면 직접 custom을 아래와 같이 진행해볼 수 있을거 같다.
+
+```java
+public class SimpleApplicationEventMulticaster extends AbstractApplicationEventMulticaster {
+    ...
+
+    public void setTaskExecutor(@Nullable Executor taskExecutor) {
+        this.taskExecutor = taskExecutor;
+    }
+}
+
+@Bean
+public ApplicationEventMulticaster applicationEventMulticaster() {
+    SimpleApplicationEventMulticaster multicaster = new SimpleApplicationEventMulticaster();
+    multicaster.setTaskExecutor(new AsyncTaskExecutor()); // 비동기 처리
+    return multicaster;
+}
+```
+
+<br/>
+
+### onRefresh()
+> Template method which can be overridden to add context-specific refresh work. Called on initialization of special beans, before instantiation of singletons. This implementation is empty. throws BeansException in case of errors
+
+템플릿 메서드로 실제로는 비어 있으며 자식 클래스(concrete)에서 이를 구현하여 처리할 수 있다.
+
+```java
+protected void onRefresh() throws BeansException {
+    // For subclasses: do nothing by default.
+}
+```
+
+### registerListeners()
+
+```java
+protected void registerListeners() {
+    // mutlicaster에 listener 등록
+    for (ApplicationListener<?> listener : getApplicationListeners()) {
+        getApplicationEventMulticaster().addApplicationListener(listener);
+    }
+
+    // 기본적으로 6개의 application listener bean name이 있다.
+    // 실제 인스턴스화를 진행하는 것이 아니라 beanName만 등록한다.
+    String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
+    for (String listenerBeanName : listenerBeanNames) {
+        getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
+    }
+
+    // 한번에 발행
+    Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
+    this.earlyApplicationEvents = null;
+    if (!CollectionUtils.isEmpty(earlyEventsToProcess)) {
+        for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+            getApplicationEventMulticaster().multicastEvent(earlyEvent);
+        }
+    }
+}
+```
+
+![application listener](../public/images/0328/applicationListener.png)
+
+디버거에서 확인해보면 기본적으로 이미 인스턴스화된 12개의 listener를 등록하며 반복문을 순회하며 ApplicationListener를 Multicaster에 등록한다.
+하단에 Bean Name을 추출하는 부분은 `addApplicationListenerBean(listenerBeanName)` 으로 동작하며 초기화를 해당 메서드 실행시에 진행하는 것이 아닌
+실제 인스턴스화는 `finishBeanFactoryInitialization()`에서 이루어진다.
+
+`earlyApplicationEvents`는 **multicaster가 아직 준비되지 않은 시점에 발행된 이벤트들을 임시 보관하는 버퍼**이다.
+`registerListeners()`에서 multicaster가 준비된 시점에 한꺼번에 발행한다.
+
+`listenerBeanNames`
+
+1. org.springframework.boot.autoconfigure.internalCachingMetadataReaderFactory
+2. applicationTaskExecutor
+3. mvcResourceUrlProvider
+4. springApplicationAdminRegistrar
+5. applicationAvailability
+6. restartingClassPathChangedEventListener
+7. conditionEvaluationDeltaLoggingListener
+
+**왜 이렇게 동작할까?**
+addApplicationListener(listener)
+
+prepareContext()에서 context.addApplicationListener(new KeepAlive()) 처럼 이미 new로 직접 생성된 인스턴스가 있으니까 바로 등록 가능하다.
+
+addApplicationListenerBean(beanName)의 경우 @Component로 등록된 리스너처럼 아직 인스턴스가 없고 BeanDefinition만 존재한다.
+따라서 이름만 예약해두고 finishBeanFactoryInitialization()에서 인스턴스화될 때 실제 등록이 가능하다.
+
+
+<br/>
+

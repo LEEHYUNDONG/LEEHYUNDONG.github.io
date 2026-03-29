@@ -4,6 +4,7 @@ import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { formatDate } from '@/lib/utils';
 import TableOfContents from '@/components/TableOfContents';
 import CodeCopyButton from '@/components/CodeCopyButton';
+import ImageLightbox from '@/components/ImageLightbox';
 import '@/styles/post.css';
 
 interface PageProps {
@@ -43,6 +44,7 @@ export default async function PostPage({ params }: PageProps) {
     <>
       <TableOfContents />
       <CodeCopyButton />
+      <ImageLightbox />
       <article className="post">
         <header className="post-header">
           {post.categories && (
