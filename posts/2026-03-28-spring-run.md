@@ -887,7 +887,13 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
 @Bean
 public ApplicationEventMulticaster applicationEventMulticaster() {
     SimpleApplicationEventMulticaster multicaster = new SimpleApplicationEventMulticaster();
-    multicaster.setTaskExecutor(new AsyncTaskExecutor()); // 비동기 처리
+
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(2);
+    executor.setMaxPoolSize(10);
+    executor.initialize();
+
+    multicaster.setTaskExecutor(executor); // 비동기 처리
     return multicaster;
 }
 ```
@@ -899,13 +905,21 @@ public ApplicationEventMulticaster applicationEventMulticaster() {
 > Template method which can be overridden to add context-specific refresh work. Called on initialization of special
 > beans, before instantiation of singletons. This implementation is empty. throws BeansException in case of errors
 
-템플릿 메서드로 실제로는 비어 있으며 자식 클래스(concrete)에서 이를 구현하여 처리할 수 있다.
+템플릿 메서드로 AbstractApplicationContext의 기본 구현은 비어 있지만, 웹 애플리케이션 환경에서는 ServletWebServerApplicationContext가 이를 오버라이드해서 중요한 작업을 수행한다.
 
 ```java
 protected void onRefresh() throws BeansException {
     // For subclasses: do nothing by default.
 }
 ```
+
+쉽게 말하면, **웹 환경에서 내장 톰캣이 생성되는 시점**이 바로 여기다.
+`ServletWebServerApplicationContext`의 `onRefresh()`를 보면 `createWebServer()`를 호출해서 톰캣 인스턴스를 생성한다.
+하지만 이 시점에는 아직 톰캣을 시작하지는 않는다. 톰캣 자체는 생성되지만 포트를 열거나 요청을 받을 준비는 `finishRefresh()`에서 이루어진다.
+
+따라서 정리하면:
+- **onRefresh()** → 톰캣 인스턴스 생성
+- **finishRefresh()** → 톰캣 시작 (포트 개방)
 
 ### registerListeners()
 
@@ -969,8 +983,8 @@ addApplicationListenerBean(beanName)의 경우 @Component로 등록된 리스너
 ```java
 public abstract class AbstractApplicationContext extends DefaultResourceLoader
         implements ConfigurableApplicationContext {
-    
-    
+
+
     protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
         // Mark current thread for singleton instantiation with applied bootstrap locking.
         beanFactory.prepareSingletonBootstrap();
@@ -1027,27 +1041,28 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 }
 ```
 
-`finishBeanFactoryInitialization`은 실제로 **모든 싱글톤 Bean을 인스턴스화**하는 가장 무거운 단계이다.
+`finishBeanFactoryInitialization`은 refresh 과정에서 **가장 무겁고 가장 중요한 단계**다.
 
-주요 동작을 살펴보면:
+주요 동작을 순서대로 살펴보면:
 
-1. **prepareSingletonBootstrap()** - 싱글톤 인스턴스화를 위한 스레드 마킹
-2. **setBootstrapExecutor()** - Bean 초기화를 병렬로 처리할 Executor 설정 (있는 경우)
+1. **prepareSingletonBootstrap()** - 싱글톤 인스턴스화를 시작하기 위해 현재 스레드를 마킹
+2. **setBootstrapExecutor()** - Bean 초기화를 병렬로 처리할 Executor가 있다면 설정 (선택사항)
 3. **setConversionService()** - 타입 변환을 담당하는 ConversionService 설정
-4. **addEmbeddedValueResolver()** - `${...}` 같은 placeholder 해석을 위한 resolver 등록
-5. **BeanFactoryInitializer 실행** - Bean 초기화 전에 특정 작업을 수행하는 초기화 Bean 실행
+4. **addEmbeddedValueResolver()** - `${property.name}` 같은 placeholder를 해석하기 위한 resolver 등록
+5. **BeanFactoryInitializer 실행** - Bean 생성 전에 특정 초기화 작업이 필요한 Bean들 실행
 6. **LoadTimeWeaverAware 초기화** - AOP를 위한 클래스 로딩 시점 바이트코드 위빙 설정
-7. **freezeConfiguration()** - 더 이상 BeanDefinition이 변경되지 않도록 고정
-8. **preInstantiateSingletons()** - 드디어 실제 Bean 인스턴스화!
+7. **freezeConfiguration()** - 더 이상 BeanDefinition이 추가되거나 변경되지 않도록 고정
+8. **preInstantiateSingletons()** - 모든 싱글톤 Bean의 실제 인스턴스화 시작!
 
-`preInstantiateSingletons()`에서는:
-- lazy-init이 아닌 모든 싱글톤 Bean을 생성
-- 생성자 호출
-- @Autowired 의존성 주입
+특히 `preInstantiateSingletons()`에서는 정말 많은 일이 일어난다:
+- lazy-init이 아닌 모든 싱글톤 Bean을 메모리에 생성
+- 각 Bean의 생성자 호출
+- @Autowired, @Value로 의존성 주입
+- 이전에 `registerListeners()`에서 beanName으로만 예약해둔 ApplicationListener Bean들도 이 시점에 인스턴스화됨
 - @PostConstruct 메서드 실행
-- BeanPostProcessor 적용
+- BeanPostProcessor들이 각 Bean에 개입하여 추가 처리
 
-이 단계에서 우리가 작성한 @Service, @Repository, @Component, @Configuration 등이 모두 인스턴스화되는 것이다.
+결국 우리가 작성한 @Service, @Repository, @Component, @Configuration 등으로 선언한 모든 Bean이 이 단계에서 생성되고 초기화되는 것이다.
 
 <br/>
 
@@ -1082,11 +1097,14 @@ refresh의 마무리 단계이다.
 4. **publishEvent(new ContextRefreshedEvent(this))** - Context 준비 완료 이벤트 발행
 5. **LiveBeansView.registerApplicationContext()** - JMX를 통한 Bean 모니터링 등록
 
-여기서 발행되는 `ContextRefreshedEvent`는 ApplicationContext가 완전히 초기화되었음을 알리는 중요한 이벤트이다.
+여기서 발행되는 `ContextRefreshedEvent`는 ApplicationContext가 완전히 초기화되었음을 알리는 중요한 이벤트다.
 이 시점부터는 모든 Bean이 준비되어 있으므로, 이벤트 리스너에서 안전하게 모든 Bean에 접근할 수 있다.
 
-웹 애플리케이션의 경우, 이 시점에 내장 톰캣이 실제로 시작된다.
-`ServletWebServerApplicationContext`의 `onRefresh()` 메서드가 오버라이드되어 있어서 웹 서버를 시작하는 로직이 여기에 포함된다.
+웹 애플리케이션의 경우를 생각해보면, 여기서 중요한 일이 하나 더 일어난다.
+`ServletWebServerApplicationContext`의 `finishRefresh()`는 부모 클래스의 `finishRefresh()`를 호출한 후, **이전에 onRefresh()에서 생성된 내장 톰캣 인스턴스를 실제로 시작**한다.
+즉, 포트를 열고 요청을 받을 준비를 하는 단계다.
+
+따라서 우리의 애플리케이션이 HTTP 요청을 받을 수 있게 되는 시점이 바로 여기라고 봐도 된다.
 
 <br/>
 
