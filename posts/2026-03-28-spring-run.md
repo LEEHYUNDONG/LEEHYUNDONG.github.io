@@ -1212,21 +1212,25 @@ listeners.ready(context, startup.ready());
 SpringApplication.run()을 호출하면 다음과 같은 복잡한 과정을 거쳐 애플리케이션이 구동된다:
 
 **준비 단계**
+
 1. CRaC 환경 확인 및 시작 시간 기록
 2. BootstrapContext 초기화 (외부 설정 등)
 3. Headless 모드 설정
 
 **환경 구성**
+
 4. RunListener 준비 및 starting 이벤트
 5. 커맨드라인 인자 파싱
 6. Environment 준비 (application.yml 로드 등)
 7. Banner 출력
 
 **Context 생성 및 준비**
+
 8. ApplicationContext 생성 (웹 타입에 따라)
 9. prepareContext - BeanDefinition 로드, Initializer 실행
 
 **핵심 초기화 (refreshContext)**
+
 10. Bean 생성 및 의존성 주입
     - BeanFactoryPostProcessor 실행 (@Configuration 처리)
     - BeanPostProcessor 등록
@@ -1235,6 +1239,7 @@ SpringApplication.run()을 호출하면 다음과 같은 복잡한 과정을 거
     - 내장 톰캣 시작 (웹 앱)
 
 **완료**
+
 11. afterRefresh 훅
 12. startup ready 기록
 13. started 이벤트 발행
