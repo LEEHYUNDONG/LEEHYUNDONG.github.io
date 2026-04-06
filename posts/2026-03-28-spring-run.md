@@ -1026,4 +1026,206 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
     }
 }
 ```
-(작성중..)
+
+`finishBeanFactoryInitialization`은 실제로 **모든 싱글톤 Bean을 인스턴스화**하는 가장 무거운 단계이다.
+
+주요 동작을 살펴보면:
+
+1. **prepareSingletonBootstrap()** - 싱글톤 인스턴스화를 위한 스레드 마킹
+2. **setBootstrapExecutor()** - Bean 초기화를 병렬로 처리할 Executor 설정 (있는 경우)
+3. **setConversionService()** - 타입 변환을 담당하는 ConversionService 설정
+4. **addEmbeddedValueResolver()** - `${...}` 같은 placeholder 해석을 위한 resolver 등록
+5. **BeanFactoryInitializer 실행** - Bean 초기화 전에 특정 작업을 수행하는 초기화 Bean 실행
+6. **LoadTimeWeaverAware 초기화** - AOP를 위한 클래스 로딩 시점 바이트코드 위빙 설정
+7. **freezeConfiguration()** - 더 이상 BeanDefinition이 변경되지 않도록 고정
+8. **preInstantiateSingletons()** - 드디어 실제 Bean 인스턴스화!
+
+`preInstantiateSingletons()`에서는:
+- lazy-init이 아닌 모든 싱글톤 Bean을 생성
+- 생성자 호출
+- @Autowired 의존성 주입
+- @PostConstruct 메서드 실행
+- BeanPostProcessor 적용
+
+이 단계에서 우리가 작성한 @Service, @Repository, @Component, @Configuration 등이 모두 인스턴스화되는 것이다.
+
+<br/>
+
+### finishRefresh()
+
+```java
+protected void finishRefresh() {
+    // Clear context-level resource caches (such as ASM metadata from scanning).
+    clearResourceCaches();
+
+    // Initialize lifecycle processor for this context.
+    initLifecycleProcessor();
+
+    // Propagate refresh to lifecycle processor first.
+    getLifecycleProcessor().onRefresh();
+
+    // Publish the final event.
+    publishEvent(new ContextRefreshedEvent(this));
+
+    // Participate in LiveBeansView MBean, if active.
+    if (!NativeDetector.inNativeImage()) {
+        LiveBeansView.registerApplicationContext(this);
+    }
+}
+```
+
+refresh의 마무리 단계이다.
+
+1. **clearResourceCaches()** - ASM 메타데이터 같은 임시 캐시 정리
+2. **initLifecycleProcessor()** - Lifecycle 관리를 담당하는 프로세서 초기화
+3. **getLifecycleProcessor().onRefresh()** - Lifecycle Bean들에게 refresh 완료를 알림
+4. **publishEvent(new ContextRefreshedEvent(this))** - Context 준비 완료 이벤트 발행
+5. **LiveBeansView.registerApplicationContext()** - JMX를 통한 Bean 모니터링 등록
+
+여기서 발행되는 `ContextRefreshedEvent`는 ApplicationContext가 완전히 초기화되었음을 알리는 중요한 이벤트이다.
+이 시점부터는 모든 Bean이 준비되어 있으므로, 이벤트 리스너에서 안전하게 모든 Bean에 접근할 수 있다.
+
+웹 애플리케이션의 경우, 이 시점에 내장 톰캣이 실제로 시작된다.
+`ServletWebServerApplicationContext`의 `onRefresh()` 메서드가 오버라이드되어 있어서 웹 서버를 시작하는 로직이 여기에 포함된다.
+
+<br/>
+
+## 11. afterRefresh(context, applicationArguments)
+
+```java
+protected void afterRefresh(ConfigurableApplicationContext context, ApplicationArguments args) {
+    // For subclasses: do nothing by default.
+}
+```
+
+템플릿 메서드로, 기본 구현은 비어있다.
+필요하다면 SpringApplication을 상속해서 refresh 이후 추가 작업을 수행할 수 있는 확장 포인트이다.
+
+<br/>
+
+## 12. startup.ready()
+
+```java
+startup.ready();
+```
+
+애플리케이션 구동 시간을 측정하고 준비 완료 상태로 전환한다.
+CRaC를 사용하는 경우 복원 시점을 기록하고, 일반적인 경우 시작 시간을 기록한다.
+
+<br/>
+
+## 13. listeners.started(context, startup.timeTakenToStarted())
+
+```java
+listeners.started(context, startup.timeTakenToStarted());
+```
+
+모든 RunListener들에게 started 이벤트를 발행한다.
+이때 `ApplicationStartedEvent`가 발행되며, 이 시점부터는 ApplicationContext가 완전히 준비되었고 CommandLineRunner/ApplicationRunner 실행 직전이다.
+
+<br/>
+
+## 14. callRunners(context, applicationArguments)
+
+```java
+private void callRunners(ApplicationContext context, ApplicationArguments args) {
+    context.getBeanProvider(Runner.class)
+            .orderedStream()
+            .forEach((runner) -> {
+                if (runner instanceof ApplicationRunner) {
+                    callRunner((ApplicationRunner) runner, args);
+                }
+                if (runner instanceof CommandLineRunner) {
+                    callRunner((CommandLineRunner) runner, args);
+                }
+            });
+}
+```
+
+마지막으로 `ApplicationRunner`와 `CommandLineRunner` Bean들을 실행한다.
+
+**ApplicationRunner vs CommandLineRunner**
+
+둘 다 애플리케이션 시작 직후 특정 코드를 실행하기 위한 인터페이스이지만 차이가 있다:
+
+```java
+@Component
+public class MyApplicationRunner implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        // ApplicationArguments로 args 접근 (--key=value 형태 파싱 지원)
+        if (args.containsOption("debug")) {
+            System.out.println("Debug mode enabled");
+        }
+    }
+}
+
+@Component
+public class MyCommandLineRunner implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        // 원본 String 배열 그대로 전달받음
+        System.out.println("App started with " + args.length + " arguments");
+    }
+}
+```
+
+실행 순서는 `@Order` 어노테이션으로 제어할 수 있다.
+
+이 단계는 초기 데이터 로딩, 캐시 워밍업, 외부 시스템 연결 확인 등 애플리케이션 시작 직후 수행해야 하는 작업에 활용된다.
+
+<br/>
+
+## 15. listeners.ready(context, startup.ready())
+
+```java
+listeners.ready(context, startup.ready());
+```
+
+모든 과정이 완료되었음을 알리는 최종 이벤트를 발행한다.
+`ApplicationReadyEvent`가 발행되며, 이제 애플리케이션은 완전히 준비되어 요청을 처리할 수 있는 상태가 된다.
+
+웹 애플리케이션의 경우 이 시점부터 HTTP 요청을 받을 수 있다.
+
+<br/>
+
+# 정리
+
+SpringApplication.run()을 호출하면 다음과 같은 복잡한 과정을 거쳐 애플리케이션이 구동된다:
+
+**준비 단계**
+1. CRaC 환경 확인 및 시작 시간 기록
+2. BootstrapContext 초기화 (외부 설정 등)
+3. Headless 모드 설정
+
+**환경 구성**
+4. RunListener 준비 및 starting 이벤트
+5. 커맨드라인 인자 파싱
+6. Environment 준비 (application.yml 로드 등)
+7. Banner 출력
+
+**Context 생성 및 준비**
+8. ApplicationContext 생성 (웹 타입에 따라)
+9. prepareContext - BeanDefinition 로드, Initializer 실행
+
+**핵심 초기화 (refreshContext)**
+10. Bean 생성 및 의존성 주입
+    - BeanFactoryPostProcessor 실행 (@Configuration 처리)
+    - BeanPostProcessor 등록
+    - ApplicationEventMulticaster 초기화
+    - 모든 싱글톤 Bean 인스턴스화
+    - 내장 톰캣 시작 (웹 앱)
+
+**완료**
+11. afterRefresh 훅
+12. startup ready 기록
+13. started 이벤트 발행
+14. ApplicationRunner/CommandLineRunner 실행
+15. ready 이벤트 발행 → 애플리케이션 준비 완료!
+
+특히 `refreshContext` 단계가 가장 핵심적이고 무거운 작업으로, 여기서 우리가 작성한 모든 Bean이 생성되고 의존성이 주입되며 웹 서버가 시작된다.
+
+이런 내부 동작을 이해하면 Spring Boot의 자동 설정이 어느 시점에 동작하는지, 내가 만든 Bean이 언제 초기화되는지, 그리고 문제가 생겼을 때 어느 단계에서 발생한 것인지 파악하는 데 큰 도움이 된다.
+
+물론 이 모든 내용을 외울 필요는 없지만, 필요할 때 다시 찾아볼 수 있도록 전체적인 흐름은 기억해두면 좋을 것 같다.
+
